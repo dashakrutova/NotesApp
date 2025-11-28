@@ -9,6 +9,7 @@
     tools:context=".NotesListFragment">
 
     <GridLayout
+        android:id="@+id/gridLayout4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnCount="2"
@@ -18,24 +19,25 @@
             android:id="@+id/card1"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:layout_columnWeight="1">
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/card1_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="1">
                 </TextView>
+
                 <TextView
                     android:id="@+id/card1_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="2">
                 </TextView>
             </LinearLayout>
@@ -45,24 +47,25 @@
             android:id="@+id/card2"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:layout_columnWeight="1">
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/card2_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="1">
                 </TextView>
+
                 <TextView
                     android:id="@+id/card2_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="2">
                 </TextView>
             </LinearLayout>
@@ -72,24 +75,25 @@
             android:id="@+id/card3"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:layout_columnWeight="1">
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/card3_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="1">
                 </TextView>
+
                 <TextView
                     android:id="@+id/card3_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="2">
                 </TextView>
             </LinearLayout>
@@ -99,28 +103,38 @@
             android:id="@+id/card4"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_margin="8dp"
-            android:layout_columnWeight="1">
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/card4_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="1">
                 </TextView>
+
                 <TextView
                     android:id="@+id/card4_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text=""
                     android:layout_weight="2">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </GridLayout>
+
+    <Button
+        android:id="@+id/btnClearAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Очистить все"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

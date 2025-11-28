@@ -2,6 +2,7 @@ package com.example.notesapp
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,10 @@ class NoteFragment : Fragment() {
             findNavController().navigateUp()
         }
     }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 
     private fun loadNote(id: Int){
         val title = prefs.getString("note_title_$id", "Заметка $id")
@@ -59,11 +64,5 @@ class NoteFragment : Fragment() {
             .putString("note_text_$id", text)
             .apply()
         Toast.makeText(requireContext(), "Сохранено", Toast.LENGTH_SHORT).show()
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding = null
     }
 }
