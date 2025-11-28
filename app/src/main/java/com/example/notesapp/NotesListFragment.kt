@@ -27,7 +27,6 @@ class NotesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNotesListBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
         return binding?.root
     }
 
@@ -45,6 +44,9 @@ class NotesListFragment : Fragment() {
         }
         binding?.card4?.setOnClickListener {
             openNoteEditor(4)
+        }
+        binding?.btnClearAll?.setOnClickListener {
+            clearAllNotes()
         }
     }
 
@@ -76,5 +78,14 @@ class NotesListFragment : Fragment() {
         textView.text = text
         textView.maxLines = 2
         textView.ellipsize = TextUtils.TruncateAt.END
+    }
+    private fun clearAllNotes(){
+        val editor = prefs.edit()
+        for(i in 1..4){
+            editor.putString("note_title_$i", "Заметка $i")
+            editor.putString("note_text_$i", "")
+        }
+        editor.apply()
+        loadCards()
     }
 }
