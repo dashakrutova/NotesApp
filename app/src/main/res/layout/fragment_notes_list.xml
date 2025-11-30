@@ -5,11 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="15dp"
     android:orientation="vertical"
     tools:context=".NotesListFragment">
 
     <GridLayout
-        android:id="@+id/gridLayout4"
+        android:id="@+id/gridLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnCount="2"
@@ -31,14 +32,16 @@
                     android:id="@+id/card1_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="#FFF2CC">
                 </TextView>
 
                 <TextView
                     android:id="@+id/card1_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2">
+                    android:layout_weight="2"
+                    android:background="#DAE8FC">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -59,14 +62,16 @@
                     android:id="@+id/card2_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="#FFF2CC">
                 </TextView>
 
                 <TextView
                     android:id="@+id/card2_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2">
+                    android:layout_weight="2"
+                    android:background="#DAE8FC">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -87,14 +92,16 @@
                     android:id="@+id/card3_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="#FFF2CC">
                 </TextView>
 
                 <TextView
                     android:id="@+id/card3_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2">
+                    android:layout_weight="2"
+                    android:background="#DAE8FC">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -115,14 +122,16 @@
                     android:id="@+id/card4_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="#FFF2CC">
                 </TextView>
 
                 <TextView
                     android:id="@+id/card4_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2">
+                    android:layout_weight="2"
+                    android:background="#DAE8FC">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -130,11 +139,16 @@
 
     <Button
         android:id="@+id/btnClearAll"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="Очистить все"/>
+        android:padding="12dp"
+        android:text="Очистить все"
+        android:textColor="@color/black"
+        android:backgroundTint="#D5E8D4"
+        app:cornerRadius="10dp">
+    </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
