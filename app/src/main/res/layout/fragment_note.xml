@@ -4,28 +4,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
     tools:context=".NoteFragment"
     android:orientation="vertical">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/layout_header" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="10dp"
         android:hint="Введите название заметки"
-        app:boxStrokeColor="#889E87"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusBottomEnd="12dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/MyOutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:textSize="20sp"
+            android:textSize="@dimen/text_size_note_large_title"
             android:maxLines="1"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -34,13 +34,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:hint="Введите текст заметки"
-        app:boxStrokeColor="#889E87"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusBottomEnd="12dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/MyOutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_text"
@@ -48,7 +45,8 @@
             android:layout_height="match_parent"
             android:padding="12dp"
             android:minHeight="300dp"
-            android:gravity="top"/>
+            android:gravity="top"
+            android:textSize="@dimen/text_size_note_body"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,9 +54,7 @@
         android:id="@+id/btn_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
+        android:layout_margin="15dp"
         android:text="Сохранить"
-        android:textColor="@color/black"
-        android:backgroundTint="#D5E8D4"
-        app:cornerRadius="10dp"/>
+        style="@style/PrimaryButton"/>
 </LinearLayout>

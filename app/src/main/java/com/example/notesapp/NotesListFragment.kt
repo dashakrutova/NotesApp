@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.example.notesapp.databinding.FragmentNotesListBinding
+import com.example.notesapp.databinding.LayoutHeaderBinding
 
 class NotesListFragment : Fragment() {
     private var binding: FragmentNotesListBinding? = null
@@ -33,16 +34,21 @@ class NotesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.card1?.setOnClickListener {
+        binding?.header?.let { headerBinding ->
+            headerBinding.tvHeaderTitle.text = "Заметки"
+            headerBinding.btnBack.visibility = View.GONE
+        }
+
+        binding?.cvNote1?.setOnClickListener {
             openNoteEditor(1)
         }
-        binding?.card2?.setOnClickListener {
+        binding?.cvNote2?.setOnClickListener {
             openNoteEditor(2)
         }
-        binding?.card3?.setOnClickListener {
+        binding?.cvNote3?.setOnClickListener {
             openNoteEditor(3)
         }
-        binding?.card4?.setOnClickListener {
+        binding?.cvNote4?.setOnClickListener {
             openNoteEditor(4)
         }
         binding?.btnClearAll?.setOnClickListener {
@@ -64,10 +70,10 @@ class NotesListFragment : Fragment() {
         findNavController().navigate(action)
     }
     private fun loadCards(){
-        loadCard(1, binding!!.card1Title, binding!!.card1Text)
-        loadCard(2, binding!!.card2Title, binding!!.card2Text)
-        loadCard(3, binding!!.card3Title, binding!!.card3Text)
-        loadCard(4, binding!!.card4Title, binding!!.card4Text)
+        loadCard(1, binding!!.tvNote1Title, binding!!.tvNote1Text)
+        loadCard(2, binding!!.tvNote2Title, binding!!.tvNote2Text)
+        loadCard(3, binding!!.tvNote3Title, binding!!.tvNote3Text)
+        loadCard(4, binding!!.tvNote4Title, binding!!.tvNote4Text)
     }
     private fun loadCard(id: Int, titleView: TextView, textView: TextView){
         val title = prefs.getString("note_title_$id", "Заметка $id")
@@ -75,7 +81,7 @@ class NotesListFragment : Fragment() {
 
         titleView.text = title
 
-        textView.text = text
+        textView.text = if (text.isNullOrEmpty()) "Пусто" else text
         textView.maxLines = 2
         textView.ellipsize = TextUtils.TruncateAt.END
     }

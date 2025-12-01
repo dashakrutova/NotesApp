@@ -5,21 +5,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
     android:orientation="vertical"
     tools:context=".NotesListFragment">
+
+    <FrameLayout
+        android:id="@+id/header_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <include
+            android:id="@+id/header"
+            layout="@layout/layout_header" />
+    </FrameLayout>
 
     <GridLayout
         android:id="@+id/gridLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:columnCount="2"
-        android:rowCount="2">
+        android:rowCount="2"
+        android:layout_margin="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_clear_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_container">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card1"
+            android:id="@+id/cv_note_1"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/size_card"
             android:layout_columnWeight="1"
             android:layout_margin="8dp">
 
@@ -29,27 +46,31 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/card1_title"
+                    android:id="@+id/tv_note_1_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="#FFF2CC">
+                    android:background="@color/note_title"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_small_title">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/card1_text"
+                    android:id="@+id/tv_note_1_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:background="#DAE8FC">
+                    android:background="@color/note_body"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_body">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card2"
+            android:id="@+id/cv_note_2"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/size_card"
             android:layout_columnWeight="1"
             android:layout_margin="8dp">
 
@@ -59,27 +80,31 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/card2_title"
+                    android:id="@+id/tv_note_2_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="#FFF2CC">
+                    android:background="@color/note_title"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_small_title">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/card2_text"
+                    android:id="@+id/tv_note_2_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:background="#DAE8FC">
+                    android:background="@color/note_body"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_body">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card3"
+            android:id="@+id/cv_note_3"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/size_card"
             android:layout_columnWeight="1"
             android:layout_margin="8dp">
 
@@ -89,27 +114,31 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/card3_title"
+                    android:id="@+id/tv_note3_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="#FFF2CC">
+                    android:background="@color/note_title"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_small_title">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/card3_text"
+                    android:id="@+id/tv_note_3_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:background="#DAE8FC">
+                    android:background="@color/note_body"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_body">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card4"
+            android:id="@+id/cv_note_4"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/size_card"
             android:layout_columnWeight="1"
             android:layout_margin="8dp">
 
@@ -119,36 +148,38 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/card4_title"
+                    android:id="@+id/tv_note_4_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="#FFF2CC">
+                    android:background="@color/note_title"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_small_title">
                 </TextView>
 
                 <TextView
-                    android:id="@+id/card4_text"
+                    android:id="@+id/tv_note_4_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:background="#DAE8FC">
+                    android:background="@color/note_body"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_note_body">
                 </TextView>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </GridLayout>
 
     <Button
-        android:id="@+id/btnClearAll"
-        android:layout_width="match_parent"
+        android:id="@+id/btn_clear_all"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:padding="12dp"
         android:text="Очистить все"
-        android:textColor="@color/black"
-        android:backgroundTint="#D5E8D4"
-        app:cornerRadius="10dp">
+        style="@style/PrimaryButton">
     </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

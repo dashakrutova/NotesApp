@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_button">20sp</dimen>
+    <dimen name="text_size_body">18sp</dimen>
+    <dimen name="radius_input">12dp</dimen>
+    <dimen name="radius_button">10dp</dimen>
+    <dimen name="size_card">110dp</dimen>
+    <dimen name="text_size_note_small_title">18sp</dimen>
+    <dimen name="text_size_note_large_title">20sp</dimen>
+    <dimen name="text_size_note_body">18sp</dimen>
+</resources>

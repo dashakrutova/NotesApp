@@ -7,7 +7,7 @@
     android:background="@color/header_bg">
 
     <ImageButton
-        android:id="@+id/btnBack"
+        android:id="@+id/btn_back"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -20,7 +20,7 @@
         android:contentDescription="Закрыть" />
 
     <TextView
-        android:id="@+id/tvHeaderTitle"
+        android:id="@+id/tv_header_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Заметки"
