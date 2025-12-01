@@ -13,7 +13,8 @@ import com.example.notesapp.databinding.FragmentNotesListBinding
 import com.example.notesapp.databinding.LayoutHeaderBinding
 
 class NotesListFragment : Fragment() {
-    private var binding: FragmentNotesListBinding? = null
+    private var _binding: FragmentNotesListBinding? = null
+    private val binding get() = _binding!!
 
     private val prefs by lazy{
         requireContext().getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
@@ -27,31 +28,23 @@ class NotesListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentNotesListBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentNotesListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.header?.let { headerBinding ->
-            headerBinding.tvHeaderTitle.text = "Заметки"
-            headerBinding.btnBack.visibility = View.GONE
+        binding.header.let { header ->
+            header.tvHeaderTitle.text = "Заметки"
+            header.btnBack.visibility = View.GONE
         }
 
-        binding?.cvNote1?.setOnClickListener {
-            openNoteEditor(1)
-        }
-        binding?.cvNote2?.setOnClickListener {
-            openNoteEditor(2)
-        }
-        binding?.cvNote3?.setOnClickListener {
-            openNoteEditor(3)
-        }
-        binding?.cvNote4?.setOnClickListener {
-            openNoteEditor(4)
-        }
-        binding?.btnClearAll?.setOnClickListener {
+        binding.cvNote1.setOnClickListener { openNoteEditor(1) }
+        binding.cvNote2.setOnClickListener { openNoteEditor(2) }
+        binding.cvNote3.setOnClickListener { openNoteEditor(3) }
+        binding.cvNote4.setOnClickListener { openNoteEditor(4) }
+        binding.btnClearAll.setOnClickListener {
             clearAllNotes()
         }
     }
@@ -63,17 +56,17 @@ class NotesListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
     private fun openNoteEditor(noteId: Int){
         val action = NotesListFragmentDirections.actionNotesListFragmentToNoteFragment(noteId)
         findNavController().navigate(action)
     }
     private fun loadCards(){
-        loadCard(1, binding!!.tvNote1Title, binding!!.tvNote1Text)
-        loadCard(2, binding!!.tvNote2Title, binding!!.tvNote2Text)
-        loadCard(3, binding!!.tvNote3Title, binding!!.tvNote3Text)
-        loadCard(4, binding!!.tvNote4Title, binding!!.tvNote4Text)
+        loadCard(1, binding.tvNote1Title, binding.tvNote1Text)
+        loadCard(2, binding.tvNote2Title, binding.tvNote2Text)
+        loadCard(3, binding.tvNote3Title, binding.tvNote3Text)
+        loadCard(4, binding.tvNote4Title, binding.tvNote4Text)
     }
     private fun loadCard(id: Int, titleView: TextView, textView: TextView){
         val title = prefs.getString("note_title_$id", "Заметка $id")

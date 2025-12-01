@@ -16,7 +16,8 @@ class NoteFragment : Fragment() {
     private val prefs by lazy {
         requireContext().getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
     }
-    private var binding: FragmentNoteBinding? = null
+    private var _binding: FragmentNoteBinding? = null
+    private val binding get()= _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,19 +27,16 @@ class NoteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentNoteBinding.inflate(inflater, container, false)
-        return binding?.root
+        _binding = FragmentNoteBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.header?.let { headerBinding ->
+        binding.header.let { headerBinding ->
             headerBinding.tvHeaderTitle.text = "Заметки"
             headerBinding.btnBack.visibility = View.VISIBLE
-        }
-        binding?.header?.btnBack?.setOnClickListener {
-            findNavController().navigateUp()
         }
 
         val args: NoteFragmentArgs by navArgs()
@@ -46,27 +44,30 @@ class NoteFragment : Fragment() {
 
         loadNote(id)
 
-        binding?.btnSave?.setOnClickListener {
+        binding.btnSave.setOnClickListener {
             saveNote(id)
+            findNavController().navigateUp()
+        }
+        binding.header.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
     }
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
     private fun loadNote(id: Int){
         val title = prefs.getString("note_title_$id", "Заметка $id")
         val text = prefs.getString("note_text_$id", "")
 
-        binding?.etTitle?.setText(title)
-        binding?.etText?.setText(text)
+        binding.etTitle.setText(title)
+        binding.etText.setText(text)
     }
 
     private fun saveNote(id: Int){
-        val title = binding?.etTitle?.text.toString()
-        val text = binding?.etText?.text.toString()
+        val title = binding.etTitle.text.toString()
+        val text = binding.etText.text.toString()
 
         prefs.edit()
             .putString("note_title_$id", title)
