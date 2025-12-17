@@ -1,16 +1,16 @@
 package com.example.notesapp
 
+import Note
+import NotesAdapter
 import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.notesapp.databinding.FragmentNotesListBinding
-import com.example.notesapp.databinding.LayoutHeaderBinding
 
 class NotesListFragment : Fragment() {
     private var _binding: FragmentNotesListBinding? = null
@@ -19,10 +19,14 @@ class NotesListFragment : Fragment() {
     private val prefs by lazy{
         requireContext().getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
     }
+    private val notesAdapter = NotesAdapter { noteId ->
+        openNoteEditor(noteId)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,10 +44,11 @@ class NotesListFragment : Fragment() {
             header.btnBack.visibility = View.GONE
         }
 
-        binding.cvNote1.setOnClickListener { openNoteEditor(1) }
-        binding.cvNote2.setOnClickListener { openNoteEditor(2) }
-        binding.cvNote3.setOnClickListener { openNoteEditor(3) }
-        binding.cvNote4.setOnClickListener { openNoteEditor(4) }
+        binding.recyclerView.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = notesAdapter // Подключаем наш адаптер
+        }
+
         binding.btnClearAll.setOnClickListener {
             clearAllNotes()
         }
@@ -51,7 +56,7 @@ class NotesListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        loadCards()
+        loadNotes()
     }
 
     override fun onDestroyView() {
@@ -62,21 +67,17 @@ class NotesListFragment : Fragment() {
         val action = NotesListFragmentDirections.actionNotesListFragmentToNoteFragment(noteId)
         findNavController().navigate(action)
     }
-    private fun loadCards(){
-        loadCard(1, binding.tvNote1Title, binding.tvNote1Text)
-        loadCard(2, binding.tvNote2Title, binding.tvNote2Text)
-        loadCard(3, binding.tvNote3Title, binding.tvNote3Text)
-        loadCard(4, binding.tvNote4Title, binding.tvNote4Text)
-    }
-    private fun loadCard(id: Int, titleView: TextView, textView: TextView){
-        val title = prefs.getString("note_title_$id", "Заметка $id")
-        val text = prefs.getString("note_text_$id", "")
 
-        titleView.text = title
+    private fun loadNotes() {
+        val notesList = mutableListOf<Note>()
 
-        textView.text = if (text.isNullOrEmpty()) "Пусто" else text
-        textView.maxLines = 2
-        textView.ellipsize = TextUtils.TruncateAt.END
+        for (i in 1..4) {
+            val title = prefs.getString("note_title_$i", "Заметка $i") ?: "Заметка $i"
+            val text = prefs.getString("note_text_$i", "") ?: ""
+
+            notesList.add(Note(i, title, text))
+        }
+        notesAdapter.updateData(notesList)
     }
     private fun clearAllNotes(){
         val editor = prefs.edit()
@@ -85,6 +86,6 @@ class NotesListFragment : Fragment() {
             editor.putString("note_text_$i", "")
         }
         editor.apply()
-        loadCards()
+        loadNotes()
     }
 }

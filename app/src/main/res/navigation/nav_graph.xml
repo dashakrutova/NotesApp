@@ -23,5 +23,4 @@
             android:name="id_note"
             app:argType="integer" />
     </fragment>
-
 </navigation>
