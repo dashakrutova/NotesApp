@@ -1,8 +1,7 @@
 package com.example.notesapp
 
-import Note
 import NotesAdapter
-import android.content.Context
+import NotesRepository
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,12 +12,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.notesapp.databinding.FragmentNotesListBinding
 
 class NotesListFragment : Fragment() {
+
+    private val repository by lazy{
+        NotesRepository(requireContext())
+    }
     private var _binding: FragmentNotesListBinding? = null
     private val binding get() = _binding!!
-
-    private val prefs by lazy{
-        requireContext().getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
-    }
     private val notesAdapter = NotesAdapter { noteId ->
         openNoteEditor(noteId)
     }
@@ -69,23 +68,11 @@ class NotesListFragment : Fragment() {
     }
 
     private fun loadNotes() {
-        val notesList = mutableListOf<Note>()
-
-        for (i in 1..4) {
-            val title = prefs.getString("note_title_$i", "Заметка $i") ?: "Заметка $i"
-            val text = prefs.getString("note_text_$i", "") ?: ""
-
-            notesList.add(Note(i, title, text))
-        }
-        notesAdapter.updateData(notesList)
+        val notes = repository.getNotes()
+        notesAdapter.updateData(notes)
     }
     private fun clearAllNotes(){
-        val editor = prefs.edit()
-        for(i in 1..4){
-            editor.putString("note_title_$i", "Заметка $i")
-            editor.putString("note_text_$i", "")
-        }
-        editor.apply()
+        repository.clearAllNotes()
         loadNotes()
     }
 }

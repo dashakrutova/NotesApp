@@ -1,8 +1,8 @@
 package com.example.notesapp
 
-import android.content.Context
+import Note
+import NotesRepository
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +13,9 @@ import androidx.navigation.fragment.navArgs
 import com.example.notesapp.databinding.FragmentNoteBinding
 
 class NoteFragment : Fragment() {
-    private val prefs by lazy {
-        requireContext().getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
+
+    private val repository by lazy{
+        NotesRepository(requireContext())
     }
     private var _binding: FragmentNoteBinding? = null
     private val binding get()= _binding!!
@@ -58,21 +59,18 @@ class NoteFragment : Fragment() {
     }
 
     private fun loadNote(id: Int){
-        val title = prefs.getString("note_title_$id", "Заметка $id")
-        val text = prefs.getString("note_text_$id", "")
-
-        binding.etTitle.setText(title)
-        binding.etText.setText(text)
+        val note = repository.getNote(id)
+        binding.etTitle.setText(note.title)
+        binding.etText.setText(note.text)
     }
 
     private fun saveNote(id: Int){
-        val title = binding.etTitle.text.toString()
-        val text = binding.etText.text.toString()
-
-        prefs.edit()
-            .putString("note_title_$id", title)
-            .putString("note_text_$id", text)
-            .apply()
+        val note = Note(
+            id = id,
+            title = binding.etTitle.text.toString(),
+            text = binding.etText.text.toString()
+        )
+        repository.saveNote(note)
         Toast.makeText(requireContext(), "Сохранено", Toast.LENGTH_SHORT).show()
     }
 }
