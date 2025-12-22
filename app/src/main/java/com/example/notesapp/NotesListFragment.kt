@@ -38,10 +38,7 @@ class NotesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.header.let { header ->
-            header.tvHeaderTitle.text = "Заметки"
-            header.btnBack.visibility = View.GONE
-        }
+        binding.toolbar.title = "Заметки"
 
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(context, 2)

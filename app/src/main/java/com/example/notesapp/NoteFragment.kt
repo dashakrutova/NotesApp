@@ -35,9 +35,11 @@ class NoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.header.let { headerBinding ->
-            headerBinding.tvHeaderTitle.text = "Заметки"
-            headerBinding.btnBack.visibility = View.VISIBLE
+        binding.toolbar.apply{
+            title = "Заметка"
+            setNavigationOnClickListener {
+                findNavController().navigateUp()
+            }
         }
 
         val args: NoteFragmentArgs by navArgs()
@@ -47,9 +49,6 @@ class NoteFragment : Fragment() {
 
         binding.btnSave.setOnClickListener {
             saveNote(id)
-            findNavController().navigateUp()
-        }
-        binding.header.btnBack.setOnClickListener {
             findNavController().navigateUp()
         }
     }

@@ -7,9 +7,15 @@
     tools:context=".NoteFragment"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/header"
-        layout="@layout/layout_header" />
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/header_bg"
+        app:title="Заметка"
+        app:titleCentered="true"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="@color/black" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
