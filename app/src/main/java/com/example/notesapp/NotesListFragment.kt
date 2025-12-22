@@ -40,13 +40,25 @@ class NotesListFragment : Fragment() {
 
         binding.toolbar.title = "Заметки"
 
+        binding.toolbar.addMenuProvider(object : androidx.core.view.MenuProvider {
+            override fun onCreateMenu(menu: android.view.Menu, menuInflater: android.view.MenuInflater) {
+                menuInflater.inflate(R.menu.menu_notes_list, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_clear_all -> {
+                        clearAllNotes()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, androidx.lifecycle.Lifecycle.State.RESUMED)
+
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(context, 2)
             adapter = notesAdapter // Подключаем наш адаптер
-        }
-
-        binding.btnClearAll.setOnClickListener {
-            clearAllNotes()
         }
     }
 
