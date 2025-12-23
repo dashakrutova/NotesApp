@@ -60,6 +60,11 @@ class NotesListFragment : Fragment() {
             layoutManager = GridLayoutManager(context, 2)
             adapter = notesAdapter // Подключаем наш адаптер
         }
+
+        binding.fabAdd.setOnClickListener {
+            val newId = repository.getNextId()
+            openNoteEditor(newId)
+        }
     }
 
     override fun onResume() {
@@ -78,6 +83,15 @@ class NotesListFragment : Fragment() {
 
     private fun loadNotes() {
         val notes = repository.getNotes()
+
+        if (notes.isEmpty()) {
+            binding.tvEmptyState.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.GONE
+        } else {
+            binding.tvEmptyState.visibility = View.GONE
+            binding.recyclerView.visibility = View.VISIBLE
+        }
+
         notesAdapter.updateData(notes)
     }
     private fun clearAllNotes(){

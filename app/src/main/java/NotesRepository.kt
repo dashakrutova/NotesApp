@@ -5,18 +5,18 @@ class NotesRepository(context: Context) {
     private val prefs =
         context.getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
 
-    private val notesCount = 4
+    private fun getIds(): List<Int> {
+        val idString = prefs.getString("note_ids", "") ?: ""
+        if (idString.isEmpty()) return emptyList()
+        return idString.split(",").map { it.toInt() }
+    }
+
+    private fun saveIds(ids: List<Int>) {
+        prefs.edit { putString("note_ids", ids.joinToString(",")) }
+    }
 
     fun getNotes() :List<Note> {
-        val notes = mutableListOf<Note>()
-
-        for (i in 1..notesCount) {
-            val title = prefs.getString("note_title_$i", "Заметка $i") ?: "Заметка $i"
-            val text = prefs.getString("note_text_$i", "") ?: ""
-
-            notes.add(Note(i, title, text))
-        }
-        return notes
+        return getIds().map { id -> getNote(id) }
     }
 
     fun getNote(id: Int) : Note{
@@ -26,18 +26,22 @@ class NotesRepository(context: Context) {
     }
 
     fun saveNote(note: Note){
+        val ids = getIds().toMutableList()
+        if (!ids.contains(note.id)) {
+            ids.add(note.id)
+            saveIds(ids)
+        }
         prefs.edit {
             putString("note_title_${note.id}", note.title)
             putString("note_text_${note.id}", note.text)
         }
     }
+    fun getNextId(): Int {
+        val ids = getIds()
+        return if (ids.isEmpty()) 1 else ids.maxOrNull()!! + 1
+    }
 
     fun clearAllNotes(){
-        prefs.edit {
-            for (i in 1..notesCount) {
-                putString("note_title_$i", "Заметка $i")
-                putString("note_text_$i", "")
-            }
-        }
+        prefs.edit { clear() }
     }
 }

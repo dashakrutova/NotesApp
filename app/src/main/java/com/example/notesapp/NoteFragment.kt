@@ -64,11 +64,17 @@ class NoteFragment : Fragment() {
     }
 
     private fun saveNote(id: Int){
+        val inputTitle = binding.etTitle.text.toString()
+        val inputText = binding.etText.text.toString()
+
+        val finalTitle = if (inputTitle.isBlank()) "Заметка $id" else inputTitle
+
         val note = Note(
             id = id,
-            title = binding.etTitle.text.toString(),
-            text = binding.etText.text.toString()
+            title = finalTitle,
+            text = inputText
         )
+
         repository.saveNote(note)
         Toast.makeText(requireContext(), "Сохранено", Toast.LENGTH_SHORT).show()
     }
