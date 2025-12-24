@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_switch_layout"
+        android:icon="@drawable/ic_view_list"
+        android:title="Сменить вид"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/action_clear_all"
         android:icon="@drawable/ic_delete"
         android:title="Очистить все"

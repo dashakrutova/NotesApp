@@ -7,12 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notesapp.databinding.FragmentNotesListBinding
 
 class NotesListFragment : Fragment() {
 
+    private var isGridLayout = true
     private val repository by lazy{
         NotesRepository(requireContext())
     }
@@ -43,10 +46,19 @@ class NotesListFragment : Fragment() {
         binding.toolbar.addMenuProvider(object : androidx.core.view.MenuProvider {
             override fun onCreateMenu(menu: android.view.Menu, menuInflater: android.view.MenuInflater) {
                 menuInflater.inflate(R.menu.menu_notes_list, menu)
+
+                updateMenuIcon(menu.findItem(R.id.action_switch_layout))
             }
 
             override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
                 return when (menuItem.itemId) {
+                    R.id.action_switch_layout -> {
+                        isGridLayout = !isGridLayout
+                        setupLayoutManager()
+                        updateMenuIcon(menuItem)
+                        true
+                    }
+
                     R.id.action_clear_all -> {
                         clearAllNotes()
                         true
@@ -56,10 +68,9 @@ class NotesListFragment : Fragment() {
             }
         }, viewLifecycleOwner, androidx.lifecycle.Lifecycle.State.RESUMED)
 
-        binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(context, 2)
-            adapter = notesAdapter // Подключаем наш адаптер
-        }
+        setupLayoutManager()
+
+        binding.recyclerView.adapter = notesAdapter
 
         binding.fabAdd.setOnClickListener {
             val newId = repository.getNextId()
@@ -75,6 +86,22 @@ class NotesListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupLayoutManager() {
+        binding.recyclerView.layoutManager = if (isGridLayout) {
+            GridLayoutManager(requireContext(), 2)
+        } else {
+            LinearLayoutManager(requireContext())
+        }
+    }
+    private fun updateMenuIcon(menuItem: android.view.MenuItem) {
+        val iconRes = if (isGridLayout) {
+            R.drawable.ic_view_list
+        } else {
+            R.drawable.ic_view_grid
+        }
+        menuItem.icon = ContextCompat.getDrawable(requireContext(), iconRes)
     }
     private fun openNoteEditor(noteId: Int){
         val action = NotesListFragmentDirections.actionNotesListFragmentToNoteFragment(noteId)
