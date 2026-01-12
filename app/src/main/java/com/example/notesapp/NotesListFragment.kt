@@ -49,13 +49,13 @@ class NotesListFragment : Fragment() {
 
                 updateMenuIcon(menu.findItem(R.id.action_switch_layout))
             }
-
             override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_switch_layout -> {
                         isGridLayout = !isGridLayout
                         setupLayoutManager()
                         updateMenuIcon(menuItem)
+                        loadNotes()
                         true
                     }
 
@@ -69,7 +69,6 @@ class NotesListFragment : Fragment() {
         }, viewLifecycleOwner, androidx.lifecycle.Lifecycle.State.RESUMED)
 
         setupLayoutManager()
-
         binding.recyclerView.adapter = notesAdapter
 
         binding.fabAdd.setOnClickListener {
@@ -89,10 +88,21 @@ class NotesListFragment : Fragment() {
     }
 
     private fun setupLayoutManager() {
-        binding.recyclerView.layoutManager = if (isGridLayout) {
-            GridLayoutManager(requireContext(), 2)
+        if (isGridLayout) {
+            val gridManager = GridLayoutManager(requireContext(), 2)
+
+            gridManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (notesAdapter.getItemViewType(position)) {
+                        0 -> 2
+
+                        else -> 1
+                    }
+                }
+            }
+            binding.recyclerView.layoutManager = gridManager
         } else {
-            LinearLayoutManager(requireContext())
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
     }
     private fun updateMenuIcon(menuItem: android.view.MenuItem) {
@@ -119,7 +129,7 @@ class NotesListFragment : Fragment() {
             binding.recyclerView.visibility = View.VISIBLE
         }
 
-        notesAdapter.updateData(notes)
+        notesAdapter.updateData(notes, isGridLayout)
     }
     private fun clearAllNotes(){
         repository.clearAllNotes()

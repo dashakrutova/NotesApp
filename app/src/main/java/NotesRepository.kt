@@ -31,7 +31,7 @@ class NotesRepository(context: Context) {
             ids.add(note.id)
             saveIds(ids)
         }
-        prefs.edit {
+        prefs.edit(){
             putString("note_title_${note.id}", note.title)
             putString("note_text_${note.id}", note.text)
         }
