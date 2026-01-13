@@ -34,41 +34,48 @@ class NotesAdapter(
 
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            TYPE_HEADER -> {
-                val binding = ItemHeaderBinding.inflate(inflater, parent, false)
-                HeaderViewHolder(binding)
-            }
-            else -> {
-                val binding = ItemNoteBinding.inflate(inflater, parent, false)
-                NoteViewHolder(binding)
-            }
+            TYPE_HEADER -> HeaderViewHolder.from(parent)
+            else -> NoteViewHolder.from(parent)
         }
     }
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
         when(holder){
             is HeaderViewHolder -> holder.bind(item as NoteListItem.Header)
-            is NoteViewHolder -> holder.bind((item as NoteListItem.NoteItem).note)
+            is NoteViewHolder -> holder.bind((item as NoteListItem.NoteItem).note, onClick)
         }
     }
     override fun getItemCount(): Int = items.size
 
-    inner class HeaderViewHolder(private val binding: ItemHeaderBinding) : RecyclerView.ViewHolder(binding.root){
+    class HeaderViewHolder(private val binding: ItemHeaderBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(header: NoteListItem.Header){
             binding.tvHeaderTitle.text = header.title
         }
+        companion object {
+            fun from(parent: ViewGroup): HeaderViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemHeaderBinding.inflate(layoutInflater, parent, false)
+                return HeaderViewHolder(binding)
+            }
+        }
     }
-    inner class NoteViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
+    class NoteViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(note: Note) {
+        fun bind(note: Note, onClick: (Int) -> Unit) {
             binding.tvTitle.text = note.title
 
-            binding.tvBody.text = if (note.text.isEmpty()) "Пусто" else note.text
+            binding.tvBody.text = note.text.ifEmpty { "Пусто" }
 
             binding.root.setOnClickListener {
                 onClick(note.id)
+            }
+        }
+        companion object {
+            fun from(parent: ViewGroup): NoteViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ItemNoteBinding.inflate(layoutInflater, parent, false)
+                return NoteViewHolder(binding)
             }
         }
     }
