@@ -1,17 +1,23 @@
-package com.example.notesapp
+package com.example.notesapp.fragments
 
-import NoteListItem
-import NotesAdapter
-import NotesRepository
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.notesapp.R
+import com.example.notesapp.adapters.NotesAdapter
+import com.example.notesapp.data.NoteListItem
+import com.example.notesapp.data.NotesRepository
 import com.example.notesapp.databinding.FragmentNotesListBinding
 
 class NotesListFragment : Fragment() {
@@ -36,21 +42,21 @@ class NotesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _notesAdapter = NotesAdapter (
+        _notesAdapter = NotesAdapter(
             onNoteClick = { noteId -> openNoteEditor(noteId) },
             onNoteDelete = { noteId -> deleteNote(noteId) }
         )
 
         binding.toolbar.title = "Заметки"
 
-        binding.toolbar.addMenuProvider(object : androidx.core.view.MenuProvider {
-            override fun onCreateMenu(menu: android.view.Menu, menuInflater: android.view.MenuInflater) {
+        binding.toolbar.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_notes_list, menu)
 
                 updateMenuIcon(menu.findItem(R.id.action_switch_layout))
             }
 
-            override fun onMenuItemSelected(menuItem: android.view.MenuItem): Boolean {
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_switch_layout -> {
                         isGridLayout = !isGridLayout
@@ -67,7 +73,7 @@ class NotesListFragment : Fragment() {
                     else -> false
                 }
             }
-        }, viewLifecycleOwner, androidx.lifecycle.Lifecycle.State.RESUMED)
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         setupLayoutManager()
         binding.recyclerView.adapter = notesAdapter
@@ -105,7 +111,7 @@ class NotesListFragment : Fragment() {
         binding.recyclerView.layoutManager = layoutManager
     }
 
-    private fun updateMenuIcon(menuItem: android.view.MenuItem) {
+    private fun updateMenuIcon(menuItem: MenuItem) {
         val iconRes = if (isGridLayout) {
             R.drawable.ic_view_list
         } else {
@@ -114,7 +120,7 @@ class NotesListFragment : Fragment() {
         menuItem.icon = ContextCompat.getDrawable(requireContext(), iconRes)
     }
     private fun openNoteEditor(noteId: Int){
-        val action = NotesListFragmentDirections.actionNotesListFragmentToNoteFragment(noteId)
+        val action = NotesListFragmentDirections.Companion.actionNotesListFragmentToNoteFragment(noteId)
         findNavController().navigate(action)
     }
 
@@ -132,7 +138,7 @@ class NotesListFragment : Fragment() {
             val headerTitle = if (isGridLayout) "Режим: Сетка" else "Режим: Список"
             buildList {
                 add(NoteListItem.Header(headerTitle))
-                addAll(notes.map{NoteListItem.NoteItem(it)})
+                addAll(notes.map{ NoteListItem.NoteItem(it)})
             }
         }
         notesAdapter.updateData(items)

@@ -1,3 +1,5 @@
+package com.example.notesapp.data
+
 import android.content.Context
 import androidx.core.content.edit
 
