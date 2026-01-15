@@ -12,13 +12,13 @@ class NotesRepository(context: Context) {
         context.getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
 
     private fun getIds(): List<Int> {
-        val idString = prefs.getString("KEY_IDS", "").orEmpty()
+        val idString = prefs.getString(KEY_IDS, "").orEmpty()
         if (idString.isEmpty()) return emptyList()
         return idString.split(",").map { it.toInt() }
     }
 
     private fun saveIds(ids: List<Int>) {
-        prefs.edit { putString("KEY_IDS", ids.joinToString(",")) }
+        prefs.edit { putString(KEY_IDS, ids.joinToString(",")) }
     }
 
     fun getNotes() :List<Note> {
@@ -26,8 +26,8 @@ class NotesRepository(context: Context) {
     }
 
     fun getNote(id: Int) : Note{
-        val title = prefs.getString("KEY_TITLE_PREFIX$id", "Заметка $id") ?: "Заметка $id"
-        val text = prefs.getString("KEY_TEXT_PREFIX$id", "").orEmpty()
+        val title = prefs.getString("${KEY_TITLE_PREFIX}$id", "Заметка $id") ?: "Заметка $id"
+        val text = prefs.getString("${KEY_TEXT_PREFIX}$id", "").orEmpty()
         return Note(id, title, text)
     }
 
@@ -38,8 +38,8 @@ class NotesRepository(context: Context) {
             saveIds(ids)
         }
         prefs.edit(){
-            putString("KEY_TITLE_PREFIX${note.id}", note.title)
-            putString("KEY_TEXT_PREFIX${note.id}", note.text)
+            putString("${KEY_TITLE_PREFIX}${note.id}", note.title)
+            putString("${KEY_TEXT_PREFIX}${note.id}", note.text)
         }
     }
     fun getNextId(): Int {
@@ -49,5 +49,17 @@ class NotesRepository(context: Context) {
 
     fun clearAllNotes(){
         prefs.edit { clear() }
+    }
+    fun deleteNote(id: Int){
+        val ids = getIds().toMutableList()
+        if (ids.contains(id)) {
+            ids.remove(id)
+            saveIds(ids)
+
+            prefs.edit {
+                remove("${KEY_TITLE_PREFIX}$id")
+                remove("${KEY_TEXT_PREFIX}$id")
+            }
+        }
     }
 }

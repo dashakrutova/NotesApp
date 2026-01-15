@@ -5,7 +5,8 @@ import com.example.notesapp.databinding.ItemHeaderBinding
 import com.example.notesapp.databinding.ItemNoteBinding
 
 class NotesAdapter(
-    private val onClick: (Int) -> Unit
+    private val onNoteClick: (noteId: Int) -> Unit,
+    private val onNoteDelete: (noteId: Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items = listOf<NoteListItem>()
 
@@ -14,15 +15,8 @@ class NotesAdapter(
         private const val TYPE_NOTE = 1
     }
 
-    fun updateData(newNotes: List<Note>, isGrid: Boolean) {
-        val newList = mutableListOf<NoteListItem>()
-
-        val headerTitle = if (isGrid) "Режим: Сетка" else "Режим: Список"
-        newList.add(NoteListItem.Header(headerTitle))
-
-        newList.addAll(newNotes.map{NoteListItem.NoteItem(it)})
+    fun updateData(newList: List<NoteListItem>) {
         items = newList
-
         notifyDataSetChanged()
     }
 
@@ -31,21 +25,23 @@ class NotesAdapter(
             is NoteListItem.Header -> TYPE_HEADER
             is NoteListItem.NoteItem -> TYPE_NOTE
         }
-
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_HEADER -> HeaderViewHolder.from(parent)
             else -> NoteViewHolder.from(parent)
         }
     }
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
         when(holder){
             is HeaderViewHolder -> holder.bind(item as NoteListItem.Header)
-            is NoteViewHolder -> holder.bind((item as NoteListItem.NoteItem).note, onClick)
+            is NoteViewHolder -> holder.bind((item as NoteListItem.NoteItem).note, onNoteClick, onNoteDelete)
         }
     }
+
     override fun getItemCount(): Int = items.size
 
     class HeaderViewHolder(private val binding: ItemHeaderBinding) : RecyclerView.ViewHolder(binding.root){
@@ -60,16 +56,16 @@ class NotesAdapter(
             }
         }
     }
-    class NoteViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(note: Note, onClick: (Int) -> Unit) {
+    class NoteViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(note: Note, onNoteClick: (Int) -> Unit, onNoteDelete: (Int) -> Unit) {
             binding.tvTitle.text = note.title
 
             binding.tvBody.text = note.text.ifEmpty { "Пусто" }
 
-            binding.root.setOnClickListener {
-                onClick(note.id)
-            }
+            binding.root.setOnClickListener { onNoteClick(note.id) }
+
+            binding.btnDelete.setOnClickListener { onNoteDelete(note.id) }
         }
         companion object {
             fun from(parent: ViewGroup): NoteViewHolder {
