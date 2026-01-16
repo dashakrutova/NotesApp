@@ -2,9 +2,9 @@ package com.example.notesapp.data
 
 import android.content.Context
 import androidx.core.content.edit
+import com.example.notesapp.R
 
 class NotesRepository(context: Context) {
-
     companion object{
         private const val KEY_IDS = "note_ids"
         private const val KEY_TITLE_PREFIX = "note_title_"
@@ -12,6 +12,8 @@ class NotesRepository(context: Context) {
     }
     private val prefs =
         context.getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
+
+    val noteDefaultTitle = context.getString(R.string.note_default_title)
 
     private fun getIds(): List<Int> {
         val idString = prefs.getString(KEY_IDS, "").orEmpty()
@@ -28,7 +30,7 @@ class NotesRepository(context: Context) {
     }
 
     fun getNote(id: Int) : Note{
-        val title = prefs.getString("${KEY_TITLE_PREFIX}$id", "Заметка $id") ?: "Заметка $id"
+        val title = prefs.getString("${KEY_TITLE_PREFIX}$id", "$noteDefaultTitle $id") ?: "$noteDefaultTitle $id"
         val text = prefs.getString("${KEY_TEXT_PREFIX}$id", "").orEmpty()
         return Note(id, title, text)
     }

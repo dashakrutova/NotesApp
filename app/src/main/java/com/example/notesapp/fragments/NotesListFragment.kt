@@ -42,10 +42,39 @@ class NotesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbar()
+        setupRecyclerView()
+        setupListeners()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadNotes()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.recyclerView.adapter = null
+        _notesAdapter = null
+        _binding = null
+    }
+
+    private fun setupRecyclerView(){
+
         _notesAdapter = NotesAdapter(
             onNoteClick = { noteId -> openNoteEditor(noteId) },
-            onNoteDelete = { noteId -> deleteNote(noteId) }
-        )
+            onNoteDelete = { noteId -> deleteNote(noteId) })
+
+        setupLayoutManager()
+        binding.recyclerView.adapter = notesAdapter
+    }
+    private fun setupListeners(){
+        binding.fabAdd.setOnClickListener {
+            val newId = repository.getNextId()
+            openNoteEditor(newId)
+        }
+    }
+    private fun setupToolbar(){
 
         binding.toolbar.title = "Заметки"
 
@@ -74,26 +103,6 @@ class NotesListFragment : Fragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        setupLayoutManager()
-        binding.recyclerView.adapter = notesAdapter
-
-        binding.fabAdd.setOnClickListener {
-            val newId = repository.getNextId()
-            openNoteEditor(newId)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loadNotes()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.recyclerView.adapter = null
-        _notesAdapter = null
-        _binding = null
     }
 
     private fun setupLayoutManager() {

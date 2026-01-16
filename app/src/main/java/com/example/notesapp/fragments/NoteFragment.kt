@@ -8,21 +8,20 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.notesapp.R
 import com.example.notesapp.data.Note
 import com.example.notesapp.data.NotesRepository
 import com.example.notesapp.databinding.FragmentNoteBinding
 
 class NoteFragment : Fragment() {
-
     private val repository by lazy{
         NotesRepository(requireContext())
     }
+    private val noteDefaultTitle by lazy{
+        getString(R.string.note_default_title)
+    }
     private var _binding: FragmentNoteBinding? = null
     private val binding get()= _binding!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +35,7 @@ class NoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.apply{
-            title = "Заметка"
+            title = noteDefaultTitle
             setNavigationOnClickListener {
                 findNavController().navigateUp()
             }
@@ -67,7 +66,7 @@ class NoteFragment : Fragment() {
         val inputTitle = binding.etTitle.text.toString()
         val inputText = binding.etText.text.toString()
 
-        val finalTitle = if (inputTitle.isBlank()) "Заметка $id" else inputTitle
+        val finalTitle = inputTitle.ifBlank { "$noteDefaultTitle $id" }
 
         val note = Note(
             id = id,
@@ -76,6 +75,6 @@ class NoteFragment : Fragment() {
         )
 
         repository.saveNote(note)
-        Toast.makeText(requireContext(), "Сохранено", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.message_save), Toast.LENGTH_SHORT).show()
     }
 }
