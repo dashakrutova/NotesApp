@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">NotesApp</string>
     <string name="note_empty_body">Пусто</string>
-    <string name="note_default_title">Заметка</string>
     <string name="message_save">Сохранено</string>
+    <string name="title_note">Заметка</string>
+    <string name="title_note_toolbar">Заметка</string>
+    <string name="title_notes_list_toolbar">Заметки</string>
+    <string name="mode_grid">Режим: Сетка</string>
+    <string name="mode_list">Режим: Список</string>
 </resources>

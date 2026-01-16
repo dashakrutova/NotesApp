@@ -14,12 +14,11 @@ import com.example.notesapp.data.NotesRepository
 import com.example.notesapp.databinding.FragmentNoteBinding
 
 class NoteFragment : Fragment() {
+
     private val repository by lazy{
         NotesRepository(requireContext())
     }
-    private val noteDefaultTitle by lazy{
-        getString(R.string.note_default_title)
-    }
+
     private var _binding: FragmentNoteBinding? = null
     private val binding get()= _binding!!
 
@@ -35,7 +34,10 @@ class NoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.apply{
-            title = noteDefaultTitle
+
+            val titleToolbar = getString(R.string.title_note_toolbar)
+            title = titleToolbar
+
             setNavigationOnClickListener {
                 findNavController().navigateUp()
             }
@@ -66,7 +68,8 @@ class NoteFragment : Fragment() {
         val inputTitle = binding.etTitle.text.toString()
         val inputText = binding.etText.text.toString()
 
-        val finalTitle = inputTitle.ifBlank { "$noteDefaultTitle $id" }
+        val noteTitle = getString(R.string.title_note)
+        val finalTitle = inputTitle.ifBlank { "$noteTitle $id" }
 
         val note = Note(
             id = id,

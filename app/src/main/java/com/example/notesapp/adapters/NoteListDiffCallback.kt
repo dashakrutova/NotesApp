@@ -1,4 +1,4 @@
-package com.example.notesapp
+package com.example.notesapp.adapters
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.notesapp.data.NoteListItem

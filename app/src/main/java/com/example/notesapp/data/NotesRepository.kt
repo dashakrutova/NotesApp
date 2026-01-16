@@ -13,7 +13,7 @@ class NotesRepository(context: Context) {
     private val prefs =
         context.getSharedPreferences("note_prefs", Context.MODE_PRIVATE)
 
-    val noteDefaultTitle = context.getString(R.string.note_default_title)
+    val noteDefaultTitle = context.getString(R.string.title_note)
 
     private fun getIds(): List<Int> {
         val idString = prefs.getString(KEY_IDS, "").orEmpty()

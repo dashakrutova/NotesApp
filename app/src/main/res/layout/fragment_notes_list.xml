@@ -53,6 +53,7 @@
         android:layout_margin="24dp"
         android:src="@drawable/ic_plus"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="Добавить заметку"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

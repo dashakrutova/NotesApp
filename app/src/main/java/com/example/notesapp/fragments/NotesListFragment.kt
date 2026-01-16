@@ -24,6 +24,7 @@ class NotesListFragment : Fragment() {
     private val repository by lazy{
         NotesRepository(requireContext())
     }
+
     private val binding get() = _binding!!
     private var _binding: FragmentNotesListBinding? = null
     private val notesAdapter get() = _notesAdapter!!
@@ -78,7 +79,8 @@ class NotesListFragment : Fragment() {
 
     private fun setupToolbar(){
 
-        binding.toolbar.title = "Заметки"
+        val titleToolbar = getString(R.string.title_notes_list_toolbar)
+        binding.toolbar.title = titleToolbar
 
         binding.toolbar.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -147,7 +149,10 @@ class NotesListFragment : Fragment() {
             emptyList()
         }
         else {
-            val headerTitle = if (isGridLayout) "Режим: Сетка" else "Режим: Список"
+            val modeGrid = getString(R.string.mode_grid)
+            val modeList = getString(R.string.mode_list)
+
+            val headerTitle = if (isGridLayout) modeGrid else modeList
             buildList {
                 add(NoteListItem.Header(headerTitle))
                 addAll(notes.map{ NoteListItem.NoteItem(it)})
