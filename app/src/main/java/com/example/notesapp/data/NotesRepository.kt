@@ -46,6 +46,7 @@ class NotesRepository(context: Context) {
             putString("${KEY_TEXT_PREFIX}${note.id}", note.text)
         }
     }
+
     fun getNextId(): Int {
         val ids = getIds()
         return if (ids.isEmpty()) 1 else ids.maxOrNull()!! + 1
@@ -54,6 +55,7 @@ class NotesRepository(context: Context) {
     fun clearAllNotes(){
         prefs.edit { clear() }
     }
+
     fun deleteNote(id: Int){
         val ids = getIds().toMutableList()
         if (ids.contains(id)) {

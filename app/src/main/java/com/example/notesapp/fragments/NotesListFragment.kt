@@ -68,12 +68,14 @@ class NotesListFragment : Fragment() {
         setupLayoutManager()
         binding.recyclerView.adapter = notesAdapter
     }
+
     private fun setupListeners(){
         binding.fabAdd.setOnClickListener {
             val newId = repository.getNextId()
             openNoteEditor(newId)
         }
     }
+
     private fun setupToolbar(){
 
         binding.toolbar.title = "Заметки"
@@ -128,6 +130,7 @@ class NotesListFragment : Fragment() {
         }
         menuItem.icon = ContextCompat.getDrawable(requireContext(), iconRes)
     }
+
     private fun openNoteEditor(noteId: Int){
         val action = NotesListFragmentDirections.Companion.actionNotesListFragmentToNoteFragment(noteId)
         findNavController().navigate(action)
@@ -152,10 +155,12 @@ class NotesListFragment : Fragment() {
         }
         notesAdapter.updateData(items)
     }
+
     private fun deleteNote(noteId: Int){
         repository.deleteNote(noteId)
         loadNotes()
     }
+
     private fun clearAllNotes(){
         repository.clearAllNotes()
         loadNotes()

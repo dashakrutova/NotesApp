@@ -1,7 +1,9 @@
 package com.example.notesapp.adapters
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notesapp.NoteListDiffCallback
 import com.example.notesapp.data.NoteListItem
 import com.example.notesapp.adapters.viewholders.HeaderViewHolder
 import com.example.notesapp.adapters.viewholders.NoteViewHolder
@@ -18,8 +20,12 @@ class NotesAdapter(
     }
 
     fun updateData(newList: List<NoteListItem>) {
+
+        val diffCallback = NoteListDiffCallback(items, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback, true)
+
         items = newList
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemViewType(position: Int): Int {
