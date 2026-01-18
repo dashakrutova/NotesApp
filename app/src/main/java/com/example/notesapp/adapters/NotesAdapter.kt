@@ -9,17 +9,17 @@ import com.example.notesapp.adapters.viewholders.NoteViewHolder
 
 class NotesAdapter(
     private val onNoteClick: (noteId: Int) -> Unit,
-    private val onNoteDelete: (noteId: Int) -> Unit
+    private val onNoteDeleteClick: (noteId: Int) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     private var items = listOf<NoteListItem>()
 
-    companion object{
+    companion object {
         private const val TYPE_HEADER = 0
         private const val TYPE_NOTE = 1
     }
 
     fun updateData(newList: List<NoteListItem>) {
-
         val diffCallback = NoteListDiffCallback(items, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallback, true)
 
@@ -27,8 +27,12 @@ class NotesAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    fun isHeaderItem(position: Int): Boolean {
+        return getItemViewType(position) == TYPE_HEADER
+    }
+
     override fun getItemViewType(position: Int): Int {
-        return when(items[position]){
+        return when (items[position]) {
             is NoteListItem.Header -> TYPE_HEADER
             is NoteListItem.NoteItem -> TYPE_NOTE
         }
@@ -36,16 +40,19 @@ class NotesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_HEADER -> HeaderViewHolder.Companion.from(parent)
-            else -> NoteViewHolder.Companion.from(parent)
+            TYPE_HEADER -> HeaderViewHolder.from(parent)
+            else -> NoteViewHolder.from(parent)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = items[position]
-        when(holder){
+
+        when (holder) {
             is HeaderViewHolder -> holder.bind(item as NoteListItem.Header)
-            is NoteViewHolder -> holder.bind((item as NoteListItem.NoteItem).note, onNoteClick, onNoteDelete)
+            is NoteViewHolder -> {
+                holder.bind((item as NoteListItem.NoteItem).note, onNoteClick, onNoteDeleteClick)
+            }
         }
     }
 

@@ -7,19 +7,42 @@ import com.example.notesapp.R
 import com.example.notesapp.data.Note
 import com.example.notesapp.databinding.ItemNoteBinding
 
-class NoteViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(note: Note, onNoteClick: (Int) -> Unit, onNoteDelete: (Int) -> Unit) {
+class NoteViewHolder(
+    private val binding: ItemNoteBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
-        binding.tvTitle.text = note.title
+    private lateinit var note: Note
 
-        val emptyText = binding.root.context.getString(R.string.note_empty_body)
+    fun bind(
+        note: Note,
+        onNoteClick: (Int) -> Unit,
+        onNoteDelete: (Int) -> Unit
+    ) {
+        this.note = note
 
-        binding.tvBody.text = note.text.ifEmpty { emptyText }
-
-        binding.root.setOnClickListener { onNoteClick(note.id) }
-
-        binding.btnDelete.setOnClickListener { onNoteDelete(note.id) }
+        showTitle()
+        showNote()
+        setListeners(onNoteClick, onNoteDelete)
     }
+
+    private fun setListeners(
+        onNoteClick: (Int) -> Unit,
+        onNoteDelete: (Int) -> Unit,
+    ) {
+        val noteId = note.id
+        binding.root.setOnClickListener { onNoteClick(noteId) }
+        binding.btnDelete.setOnClickListener { onNoteDelete(noteId) }
+    }
+
+    private fun showNote() {
+        val emptyText = binding.root.context.getString(R.string.note_empty_body)
+        binding.tvBody.text = note.text.ifEmpty { emptyText }
+    }
+
+    private fun showTitle() {
+        binding.tvTitle.text = note.title
+    }
+
     companion object {
         fun from(parent: ViewGroup): NoteViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)

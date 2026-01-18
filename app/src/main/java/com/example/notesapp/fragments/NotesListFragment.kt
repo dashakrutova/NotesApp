@@ -11,18 +11,22 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.notesapp.R
 import com.example.notesapp.adapters.NotesAdapter
 import com.example.notesapp.data.NoteListItem
-import com.example.notesapp.data.NotesRepository
 import com.example.notesapp.databinding.FragmentNotesListBinding
+import kotlinx.coroutines.launch
 
 class NotesListFragment : Fragment() {
-    private val repository by lazy{
-        NotesRepository(requireContext())
+
+    private val viewModel by viewModels<NotesListViewModel> {
+        NotesListViewModelFactory()
     }
 
     private val binding get() = _binding!!
@@ -34,7 +38,7 @@ class NotesListFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentNotesListBinding.inflate(inflater, container, false)
         return binding.root
@@ -46,11 +50,12 @@ class NotesListFragment : Fragment() {
         setupToolbar()
         setupRecyclerView()
         setupListeners()
+        observeScreenState()
     }
 
     override fun onResume() {
         super.onResume()
-        loadNotes()
+        viewModel.onViewResume()
     }
 
     override fun onDestroyView() {
@@ -60,25 +65,61 @@ class NotesListFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupRecyclerView(){
-
+    private fun setupRecyclerView() {
         _notesAdapter = NotesAdapter(
-            onNoteClick = { noteId -> openNoteEditor(noteId) },
-            onNoteDelete = { noteId -> deleteNote(noteId) })
+            onNoteClick = { noteId -> viewModel.onNoteClick(noteId) },
+            onNoteDeleteClick = { noteId -> viewModel.onDeleteNoteClick(noteId) }
+        )
 
         setupLayoutManager()
         binding.recyclerView.adapter = notesAdapter
     }
 
-    private fun setupListeners(){
+    private fun setupListeners() {
         binding.fabAdd.setOnClickListener {
-            val newId = repository.getNextId()
-            openNoteEditor(newId)
+            viewModel.onAddNoteClick()
         }
     }
 
-    private fun setupToolbar(){
+    private fun observeScreenState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.screenStateFlow.collect { state ->
+                    updateNotesListState(state)
 
+                    if (state.noteIdToShow != null) {
+                        openNoteEditor(state.noteIdToShow)
+                        viewModel.onNoteShown()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateNotesListState(state: NotesListScreenState) {
+        val notes = state.notes
+        val isEmpty = notes.isEmpty()
+
+        isGridLayout = state.isNotesInGrid
+        binding.tvEmptyState.isVisible = isEmpty
+        binding.recyclerView.isVisible = !isEmpty
+
+        val items = if (isEmpty) {
+            emptyList()
+        } else {
+            val modeGrid = getString(R.string.mode_grid)
+            val modeList = getString(R.string.mode_list)
+
+            val headerTitle = if (isGridLayout) modeGrid else modeList
+            buildList {
+                add(NoteListItem.Header(headerTitle))
+                addAll(notes.map { NoteListItem.NoteItem(it) })
+            }
+        }
+        notesAdapter.updateData(items)
+    }
+
+    private fun setupToolbar() {
         val titleToolbar = getString(R.string.title_notes_list_toolbar)
         binding.toolbar.title = titleToolbar
 
@@ -95,14 +136,15 @@ class NotesListFragment : Fragment() {
                         isGridLayout = !isGridLayout
                         setupLayoutManager()
                         updateMenuIcon(menuItem)
-                        loadNotes()
+                        viewModel.onSwitchLayoutClick()
                         true
                     }
 
                     R.id.action_clear_all -> {
-                        clearAllNotes()
+                        viewModel.onClearAllNotesClick()
                         true
                     }
+
                     else -> false
                 }
             }
@@ -110,14 +152,14 @@ class NotesListFragment : Fragment() {
     }
 
     private fun setupLayoutManager() {
-        val layoutManager = GridLayoutManager(requireContext(), 2)
+        val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
 
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (isGridLayout) {
-                    if (notesAdapter.getItemViewType(position) == 0) 2 else 1
-                } else {
-                    2
+                return when {
+                    isGridLayout.not() -> SPAN_COUNT
+                    notesAdapter.isHeaderItem(position) -> SPAN_COUNT
+                    else -> SPAN_COUNT / SPAN_COUNT
                 }
             }
         }
@@ -133,41 +175,12 @@ class NotesListFragment : Fragment() {
         menuItem.icon = ContextCompat.getDrawable(requireContext(), iconRes)
     }
 
-    private fun openNoteEditor(noteId: Int){
-        val action = NotesListFragmentDirections.Companion.actionNotesListFragmentToNoteFragment(noteId)
+    private fun openNoteEditor(noteId: Int) {
+        val action = NotesListFragmentDirections.actionNotesListFragmentToNoteFragment(noteId)
         findNavController().navigate(action)
     }
 
-    private fun loadNotes() {
-        val notes = repository.getNotes()
-        val isEmpty = notes.isEmpty()
-
-        binding.tvEmptyState.isVisible = isEmpty
-        binding.recyclerView.isVisible = !isEmpty
-
-        val items = if (isEmpty) {
-            emptyList()
-        }
-        else {
-            val modeGrid = getString(R.string.mode_grid)
-            val modeList = getString(R.string.mode_list)
-
-            val headerTitle = if (isGridLayout) modeGrid else modeList
-            buildList {
-                add(NoteListItem.Header(headerTitle))
-                addAll(notes.map{ NoteListItem.NoteItem(it)})
-            }
-        }
-        notesAdapter.updateData(items)
-    }
-
-    private fun deleteNote(noteId: Int){
-        repository.deleteNote(noteId)
-        loadNotes()
-    }
-
-    private fun clearAllNotes(){
-        repository.clearAllNotes()
-        loadNotes()
+    private companion object {
+        const val SPAN_COUNT = 2
     }
 }

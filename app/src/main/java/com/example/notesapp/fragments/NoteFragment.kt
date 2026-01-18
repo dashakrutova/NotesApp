@@ -13,10 +13,11 @@ import com.example.notesapp.data.Note
 import com.example.notesapp.data.NotesRepository
 import com.example.notesapp.databinding.FragmentNoteBinding
 
+// TODO: Добавить ViewModel
 class NoteFragment : Fragment() {
 
     private val repository by lazy{
-        NotesRepository(requireContext())
+        NotesRepository()
     }
 
     private var _binding: FragmentNoteBinding? = null

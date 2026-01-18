@@ -3,7 +3,10 @@ package com.example.notesapp.adapters
 import androidx.recyclerview.widget.DiffUtil
 import com.example.notesapp.data.NoteListItem
 
-class NoteListDiffCallback(val oldList: List<NoteListItem>, val newList: List<NoteListItem>): DiffUtil.Callback() {
+class NoteListDiffCallback(
+    val oldList: List<NoteListItem>,
+    val newList: List<NoteListItem>
+): DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size
 
@@ -13,7 +16,6 @@ class NoteListDiffCallback(val oldList: List<NoteListItem>, val newList: List<No
         oldItemPosition: Int,
         newItemPosition: Int
     ): Boolean {
-
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
