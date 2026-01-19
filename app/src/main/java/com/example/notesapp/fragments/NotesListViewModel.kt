@@ -33,6 +33,7 @@ class NotesListViewModel() : ViewModel() {
         NotesListScreenState(notes = emptyList(), isNotesInGrid = true)
     )
 
+
     private val notes = mutableListOf<Note>()
 
     init {
@@ -89,7 +90,7 @@ class NotesListViewModel() : ViewModel() {
 
         // Симуляция длительной работы
         // delay приостанавливает (суспендит) дальнейшее выполнение метода на какое-то время
-        delay(5000)
+//        delay(5000)
 
         val currentState = mutableScreenState.value
         mutableScreenState.value = currentState.copy(notes = notes.toList())

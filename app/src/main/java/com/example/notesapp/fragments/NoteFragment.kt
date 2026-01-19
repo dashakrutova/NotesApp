@@ -6,15 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.notesapp.R
 import com.example.notesapp.data.Note
 import com.example.notesapp.data.NotesRepository
 import com.example.notesapp.databinding.FragmentNoteBinding
+import kotlinx.coroutines.launch
 
 // TODO: Добавить ViewModel
 class NoteFragment : Fragment() {
+
+    private val viewModel by viewModels<NoteViewModel> {
+        NoteViewModelFactory()
+    }
 
     private val repository by lazy{
         NotesRepository()
@@ -47,25 +56,39 @@ class NoteFragment : Fragment() {
         val args: NoteFragmentArgs by navArgs()
         val id = args.idNote
 
-        loadNote(id)
+        viewModel.loadNote(id)
 
         binding.btnSave.setOnClickListener {
             saveNote(id)
             findNavController().navigateUp()
         }
+
+        observeScreenState()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun loadNote(id: Int){
-        val note = repository.getNote(id)
-        binding.etTitle.setText(note.title)
-        binding.etText.setText(note.text)
+    private fun observeScreenState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.screenStateFlow.collect { state ->
+                    updateNoteState(state)
+                }
+            }
+        }
+    }
+
+    private fun updateNoteState(state: NoteScreenState) {
+        val note = state.note
+        binding.etTitle.setText(note?.title)
+        binding.etText.setText(note?.text)
     }
 
     private fun saveNote(id: Int){
+
         val inputTitle = binding.etTitle.text.toString()
         val inputText = binding.etText.text.toString()
 
@@ -78,7 +101,7 @@ class NoteFragment : Fragment() {
             text = inputText
         )
 
-        repository.saveNote(note)
+        viewModel.onSaveNote(note)
         Toast.makeText(requireContext(), getString(R.string.message_save), Toast.LENGTH_SHORT).show()
     }
 }

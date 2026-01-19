@@ -31,6 +31,7 @@ class NotesListFragment : Fragment() {
 
     private val binding get() = _binding!!
     private var _binding: FragmentNotesListBinding? = null
+
     private val notesAdapter get() = _notesAdapter!!
     private var _notesAdapter: NotesAdapter? = null
 
@@ -49,7 +50,7 @@ class NotesListFragment : Fragment() {
 
         setupToolbar()
         setupRecyclerView()
-        setupListeners()
+        setupClickListeners()
         observeScreenState()
     }
 
@@ -75,7 +76,7 @@ class NotesListFragment : Fragment() {
         binding.recyclerView.adapter = notesAdapter
     }
 
-    private fun setupListeners() {
+    private fun setupClickListeners() {
         binding.fabAdd.setOnClickListener {
             viewModel.onAddNoteClick()
         }
