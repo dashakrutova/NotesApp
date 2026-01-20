@@ -5,5 +5,5 @@
     android:layout_height="wrap_content"
     android:padding="15dp"
     android:textSize="20sp"
-    android:text="Тип отображения: Сетка">
+    android:text="@string/mode_grid">
 </TextView>

@@ -1,10 +1,17 @@
 <resources>
     <string name="app_name">NotesApp</string>
-    <string name="note_empty_body">Пусто</string>
+    <string name="empty_note_body">Пусто</string>
+    <string name="empty_notes_list">Заметок нет</string>
     <string name="message_save">Сохранено</string>
     <string name="title_note">Заметка</string>
     <string name="title_note_toolbar">Заметка</string>
     <string name="title_notes_list_toolbar">Заметки</string>
     <string name="mode_grid">Режим: Сетка</string>
     <string name="mode_list">Режим: Список</string>
+    <string name="hint_input_title">Введите название заметки</string>
+    <string name="hint_input_text">Введите текст заметки</string>
+    <string name="button_save_text">Сохранить</string>
+    <string name="button_add_note_description">Добавить заметку</string>
+    <string name="menu_change_mode">Сменить режим</string>
+    <string name="menu_clear_all">Очистить все"</string>
 </resources>

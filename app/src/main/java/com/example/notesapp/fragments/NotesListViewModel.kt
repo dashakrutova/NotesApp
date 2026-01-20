@@ -92,6 +92,8 @@ class NotesListViewModel() : ViewModel() {
         // delay приостанавливает (суспендит) дальнейшее выполнение метода на какое-то время
 //        delay(5000)
 
+
+
         val currentState = mutableScreenState.value
         mutableScreenState.value = currentState.copy(notes = notes.toList())
     }

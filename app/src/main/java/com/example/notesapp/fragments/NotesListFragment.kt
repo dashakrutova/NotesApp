@@ -1,5 +1,6 @@
 package com.example.notesapp.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,7 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -33,6 +37,10 @@ class NotesListFragment : Fragment() {
     private var _binding: FragmentNotesListBinding? = null
 
     private val notesAdapter get() = _notesAdapter!!
+
+    val Int.dp: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
     private var _notesAdapter: NotesAdapter? = null
 
     private var isGridLayout = true
@@ -52,6 +60,24 @@ class NotesListFragment : Fragment() {
         setupRecyclerView()
         setupClickListeners()
         observeScreenState()
+        setupInsets()
+    }
+
+    private fun setupInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.toolbar.setPadding(0, systemBars.top, 0, 0)
+
+            binding.recyclerView.setPadding(0, 0, 0, systemBars.bottom)
+
+            binding.fabAdd.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = systemBars.bottom + 24.dp
+            }
+
+            insets
+        }
     }
 
     override fun onResume() {

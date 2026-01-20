@@ -4,12 +4,12 @@
     <item
         android:id="@+id/action_switch_layout"
         android:icon="@drawable/ic_view_list"
-        android:title="Сменить вид"
-        app:showAsAction="always"
+        android:title="@string/menu_change_mode"
+        app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/action_clear_all"
         android:icon="@drawable/ic_delete"
-        android:title="Очистить все"
-        app:showAsAction="always" />
+        android:title="@string/menu_clear_all"
+        app:showAsAction="ifRoom" />
 </menu>

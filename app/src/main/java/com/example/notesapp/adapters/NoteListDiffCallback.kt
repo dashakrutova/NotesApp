@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.notesapp.data.NoteListItem
 
 class NoteListDiffCallback(
+
     val oldList: List<NoteListItem>,
     val newList: List<NoteListItem>
 ): DiffUtil.Callback() {

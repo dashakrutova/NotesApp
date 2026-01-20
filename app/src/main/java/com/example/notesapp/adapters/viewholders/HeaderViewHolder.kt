@@ -11,6 +11,7 @@ class HeaderViewHolder(
 ) : RecyclerView.ViewHolder(binding.root){
 
     fun bind(header: NoteListItem.Header){
+
         binding.tvHeaderTitle.text = header.title
     }
 

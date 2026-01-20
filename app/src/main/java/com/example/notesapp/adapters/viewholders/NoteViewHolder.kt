@@ -35,7 +35,7 @@ class NoteViewHolder(
     }
 
     private fun showNote() {
-        val emptyText = binding.root.context.getString(R.string.note_empty_body)
+        val emptyText = binding.root.context.getString(R.string.empty_note_body)
         binding.tvBody.text = note.text.ifEmpty { emptyText }
     }
 

@@ -18,6 +18,7 @@ class NoteViewModelFactory() : ViewModelProvider.Factory {
 
 class NoteViewModel : ViewModel() {
 
+
     val screenStateFlow: StateFlow<NoteScreenState> get() = mutableScreenState.asStateFlow()
 
     private val mutableScreenState = MutableStateFlow(NoteScreenState(note = null))

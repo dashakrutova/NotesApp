@@ -16,6 +16,7 @@ class NotesAdapter(
 
     companion object {
         private const val TYPE_HEADER = 0
+
         private const val TYPE_NOTE = 1
     }
 
