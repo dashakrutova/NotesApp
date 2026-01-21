@@ -17,16 +17,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.notesapp.R
-import com.example.notesapp.data.Note
-import com.example.notesapp.data.NotesRepository
 import com.example.notesapp.databinding.FragmentNoteBinding
 import kotlinx.coroutines.launch
+import kotlin.toString
 
 // TODO: Добавить ViewModel
 class NoteFragment : Fragment() {
 
+    private val args: NoteFragmentArgs by navArgs()
     private val viewModel by viewModels<NoteViewModel> {
-        NoteViewModelFactory()
+        NoteViewModelFactory(args.idNote)
     }
 
     val Int.dp: Int
@@ -46,18 +46,20 @@ class NoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args: NoteFragmentArgs by navArgs()
-        val id = args.idNote
-        viewModel.loadNote(id)
-
-        binding.btnSave.setOnClickListener {
-            saveNote(id)
-            findNavController().navigateUp()
-        }
-
         setupToolbar()
+        setupClickListeners()
         observeScreenState()
         setupInsets()
+    }
+
+    private fun setupClickListeners() {
+        binding.btnSave.setOnClickListener {
+
+            viewModel.onSaveNoteClick(
+                inputTitle = binding.etTitle.text.toString(),
+                inputText = binding.etText.text.toString()
+            )
+        }
     }
 
     private fun setupToolbar() {
@@ -103,26 +105,18 @@ class NoteFragment : Fragment() {
     }
 
     private fun updateNoteState(state: NoteScreenState) {
-        val note = state.note
-        binding.etTitle.setText(note?.title)
-        binding.etText.setText(note?.text)
-    }
 
-    private fun saveNote(id: Int){
+        binding.etTitle.setText(state.title)
+        binding.etText.setText(state.text)
 
-        val inputTitle = binding.etTitle.text.toString()
-        val inputText = binding.etText.text.toString()
+        if (state.isSaveFinished){
 
-        val noteTitle = getString(R.string.title_note)
-        val finalTitle = inputTitle.ifBlank { "$noteTitle $id" }
+            Toast.makeText(requireContext(),
+                getString(R.string.message_save),
+                Toast.LENGTH_SHORT)
+                .show()
 
-        val note = Note(
-            id = id,
-            title = finalTitle,
-            text = inputText
-        )
-
-        viewModel.onSaveNote(note)
-        Toast.makeText(requireContext(), getString(R.string.message_save), Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
+        }
     }
 }

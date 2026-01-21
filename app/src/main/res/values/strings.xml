@@ -10,8 +10,9 @@
     <string name="mode_list">Режим: Список</string>
     <string name="hint_input_title">Введите название заметки</string>
     <string name="hint_input_text">Введите текст заметки</string>
-    <string name="button_save_text">Сохранить</string>
+    <string name="button_save">Сохранить</string>
     <string name="button_add_note_description">Добавить заметку</string>
+    <string name="button_delete_note_description">Удалить</string>
     <string name="menu_change_mode">Сменить режим</string>
     <string name="menu_clear_all">Очистить все"</string>
 </resources>

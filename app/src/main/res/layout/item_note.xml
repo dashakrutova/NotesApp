@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                tools:text="Заголовок"
+                tools:text="@string/title_note"
                 android:textSize="@dimen/text_size_note_small_title" />
 
             <ImageButton
@@ -39,7 +39,7 @@
                 android:layout_height="40dp"
                 android:src="@drawable/ic_delete"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Удалить"/>
+                android:contentDescription="@string/button_delete_note_description"/>
         </LinearLayout>
 
         <TextView
@@ -51,7 +51,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            tools:text="Текст заметки..."
+            tools:text="@string/empty_note_body"
             android:textSize="@dimen/text_size_note_body" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
