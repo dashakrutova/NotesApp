@@ -29,9 +29,6 @@ class NoteFragment : Fragment() {
         NoteViewModelFactory(args.idNote)
     }
 
-    val Int.dp: Int
-        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
     private var _binding: FragmentNoteBinding? = null
     private val binding get()= _binding!!
 
@@ -46,32 +43,15 @@ class NoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupInsets()
         setupToolbar()
         setupClickListeners()
         observeScreenState()
-        setupInsets()
     }
 
-    private fun setupClickListeners() {
-        binding.btnSave.setOnClickListener {
-
-            viewModel.onSaveNoteClick(
-                inputTitle = binding.etTitle.text.toString(),
-                inputText = binding.etText.text.toString()
-            )
-        }
-    }
-
-    private fun setupToolbar() {
-        binding.toolbar.apply {
-
-            val titleToolbar = getString(R.string.title_note_toolbar)
-            title = titleToolbar
-
-            setNavigationOnClickListener {
-                findNavController().navigateUp()
-            }
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupInsets() {
@@ -89,9 +69,26 @@ class NoteFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun setupToolbar() {
+        binding.toolbar.apply {
+
+            val titleToolbar = getString(R.string.title_note_toolbar)
+            title = titleToolbar
+
+            setNavigationOnClickListener {
+                findNavController().navigateUp()
+            }
+        }
+    }
+
+    private fun setupClickListeners() {
+        binding.btnSave.setOnClickListener {
+
+            viewModel.onSaveNoteClick(
+                inputTitle = binding.etTitle.text.toString(),
+                inputText = binding.etText.text.toString()
+            )
+        }
     }
 
     private fun observeScreenState() {
@@ -119,4 +116,7 @@ class NoteFragment : Fragment() {
             findNavController().navigateUp()
         }
     }
+
+    val Int.dp: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 }

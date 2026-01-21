@@ -38,9 +38,6 @@ class NotesListFragment : Fragment() {
 
     private val notesAdapter get() = _notesAdapter!!
 
-    val Int.dp: Int
-        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
     private var _notesAdapter: NotesAdapter? = null
 
     private var isGridLayout = true
@@ -56,11 +53,23 @@ class NotesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupInsets()
         setupToolbar()
         setupRecyclerView()
         setupClickListeners()
         observeScreenState()
-        setupInsets()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onViewResume()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.recyclerView.adapter = null
+        _notesAdapter = null
+        _binding = null
     }
 
     private fun setupInsets() {
@@ -80,16 +89,36 @@ class NotesListFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.onViewResume()
-    }
+    private fun setupToolbar() {
+        val titleToolbar = getString(R.string.title_notes_list_toolbar)
+        binding.toolbar.title = titleToolbar
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.recyclerView.adapter = null
-        _notesAdapter = null
-        _binding = null
+        binding.toolbar.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_notes_list, menu)
+
+                updateMenuIcon(menu.findItem(R.id.action_switch_layout))
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_switch_layout -> {
+                        isGridLayout = !isGridLayout
+                        setupLayoutManager()
+                        updateMenuIcon(menuItem)
+                        viewModel.onSwitchLayoutClick()
+                        true
+                    }
+
+                    R.id.action_clear_all -> {
+                        viewModel.onClearAllNotesClick()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupRecyclerView() {
@@ -146,38 +175,6 @@ class NotesListFragment : Fragment() {
         notesAdapter.updateData(items)
     }
 
-    private fun setupToolbar() {
-        val titleToolbar = getString(R.string.title_notes_list_toolbar)
-        binding.toolbar.title = titleToolbar
-
-        binding.toolbar.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_notes_list, menu)
-
-                updateMenuIcon(menu.findItem(R.id.action_switch_layout))
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.action_switch_layout -> {
-                        isGridLayout = !isGridLayout
-                        setupLayoutManager()
-                        updateMenuIcon(menuItem)
-                        viewModel.onSwitchLayoutClick()
-                        true
-                    }
-
-                    R.id.action_clear_all -> {
-                        viewModel.onClearAllNotesClick()
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
     private fun setupLayoutManager() {
         val layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT)
 
@@ -210,4 +207,7 @@ class NotesListFragment : Fragment() {
     private companion object {
         const val SPAN_COUNT = 2
     }
+
+    val Int.dp: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 }
