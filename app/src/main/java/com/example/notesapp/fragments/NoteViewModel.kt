@@ -54,6 +54,20 @@ class NoteViewModel(private val noteId: Int) : ViewModel() {
         val currentState = mutableScreenState.value
         mutableScreenState.value = currentState.copy(isSaveFinished = true)
     }
+
+    fun onTitleChanged(newTitle: String) {
+        if (mutableScreenState.value.title != newTitle) {
+            val currentState = mutableScreenState.value
+            mutableScreenState.value = currentState.copy(title = newTitle)
+        }
+    }
+
+    fun onTextChanged(newText: String) {
+        if (mutableScreenState.value.text != newText) {
+            val currentState = mutableScreenState.value
+            mutableScreenState.value = currentState.copy(text = newText)
+        }
+    }
 }
 
 data class NoteScreenState(

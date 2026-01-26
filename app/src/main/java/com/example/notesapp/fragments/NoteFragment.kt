@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -47,6 +48,7 @@ class NoteFragment : Fragment() {
         setupToolbar()
         setupClickListeners()
         observeScreenState()
+        setupTextChangeListener()
     }
 
     override fun onDestroyView() {
@@ -103,8 +105,15 @@ class NoteFragment : Fragment() {
 
     private fun updateNoteState(state: NoteScreenState) {
 
-        binding.etTitle.setText(state.title)
-        binding.etText.setText(state.text)
+        if (binding.etTitle.text.toString() != state.title) {
+            binding.etTitle.setText(state.title)
+            binding.etTitle.setSelection(state.title.length)
+        }
+
+        if (binding.etText.text.toString() != state.text) {
+            binding.etText.setText(state.text)
+            binding.etText.setSelection(state.text.length)
+        }
 
         if (state.isSaveFinished){
 
@@ -114,6 +123,16 @@ class NoteFragment : Fragment() {
                 .show()
 
             findNavController().navigateUp()
+        }
+    }
+
+    private fun setupTextChangeListener() {
+        binding.etTitle.doAfterTextChanged { text ->
+            viewModel.onTitleChanged(text.toString())
+        }
+
+        binding.etText.doAfterTextChanged { text ->
+            viewModel.onTextChanged(text.toString())
         }
     }
 
